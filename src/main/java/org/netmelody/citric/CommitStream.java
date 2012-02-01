@@ -10,6 +10,9 @@ public final class CommitStream {
         if (t.equals(Time.of(0))) {
             return ImmutableSortedSet.of();
         }
-        return ImmutableSortedSet.of(Artefact.number(1));
+        if (t.equals(Time.of(1))) {
+            return ImmutableSortedSet.of(Artefact.number(1));
+        }
+        return ImmutableSortedSet.of(Artefact.number(1), Artefact.number(2));
     }
 }

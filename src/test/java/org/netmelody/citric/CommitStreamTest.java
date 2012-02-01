@@ -11,16 +11,22 @@ public final class CommitStreamTest {
     
     @Test public void
     providesNoArtefactsAtTimeZero() {
-        final CommitStream stream = new CommitStream();
+        final CommitStream commits = new CommitStream();
         
-        assertThat(stream.availableAt(Time.of(0)), is(Matchers.<Artefact>emptyIterable()));
-    }
-    
-    @Test public void
-    providesOneArtefactAtTimeOne() {
-        final CommitStream stream = new CommitStream();
-        
-        assertThat(stream.availableAt(Time.of(1)), contains(Artefact.number(1)));
+        assertThat(commits.availableAt(Time.of(0)), is(Matchers.<Artefact>emptyIterable()));
     }
 
+    @Test public void
+    providesOneArtefactAtTimeOne() {
+        final CommitStream commits = new CommitStream();
+        
+        assertThat(commits.availableAt(Time.of(1)), contains(Artefact.number(1)));
+    }
+
+    @Test public void
+    providesTwoArtefactsAtTimeTwo() {
+        final CommitStream commits = new CommitStream();
+        
+        assertThat(commits.availableAt(Time.of(2)), contains(Artefact.number(1), Artefact.number(2)));
+    }
 }
