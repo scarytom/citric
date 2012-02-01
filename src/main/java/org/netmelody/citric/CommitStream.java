@@ -5,7 +5,7 @@ import java.util.SortedSet;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Ranges;
 
-public final class CommitStream implements ArtifactStream {
+public final class CommitStream implements ArtefactStream {
     
     private ContiguousSet<Artefact> artifacts = Ranges.<Artefact>all().asSet(ArtefactDomain.INSTANCE);
     

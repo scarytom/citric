@@ -2,7 +2,7 @@ package org.netmelody.citric;
 
 import java.util.SortedSet;
 
-public interface ArtifactStream {
+public interface ArtefactStream {
 
     SortedSet<Artefact> availableAt(Time t);
 
