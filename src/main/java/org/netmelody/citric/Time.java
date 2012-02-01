@@ -1,6 +1,6 @@
 package org.netmelody.citric;
 
-public final class Time {
+public final class Time implements Comparable<Time> {
 
     private final int value;
     
@@ -20,5 +20,10 @@ public final class Time {
     @Override
     public int hashCode() {
         return value;
+    }
+    
+    @Override
+    public int compareTo(Time o) {
+        return (value < o.value ? -1 : (value == o.value ? 0 : 1));
     }
 }
