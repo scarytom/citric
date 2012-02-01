@@ -30,4 +30,8 @@ public final class Time implements Comparable<Time> {
     public int value() {
         return value;
     }
+
+    public Time minus(Time delta) {
+        return Time.of(Math.max(value - delta.value, 0));
+    }
 }

@@ -2,11 +2,15 @@ package org.netmelody.citric;
 
 import java.util.SortedSet;
 
-import com.google.common.collect.ImmutableSortedSet;
-
 public final class Target implements ArtefactStream {
     
+    private final ArtefactStream parent;
+
+    public Target(ArtefactStream parent) {
+        this.parent = parent;
+    }
+
     public SortedSet<Artefact> availableAt(Time t) {
-        return ImmutableSortedSet.of();
+        return parent.availableAt(t.minus(Time.of(1)));
     }
 }
