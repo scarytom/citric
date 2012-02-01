@@ -2,20 +2,14 @@ package org.netmelody.citric;
 
 import java.util.SortedSet;
 
-import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.Ranges;
 
 public final class CommitStream {
-    private final Artefact a1 = Artefact.number(1);
+    
+    private ContiguousSet<Artefact> artifacts = Ranges.<Artefact>all().asSet(ArtefactDomain.INSTANCE);
     
     public SortedSet<Artefact> availableAt(Time t) {
-        if (t.equals(Time.of(0))) {
-            return ImmutableSortedSet.of();
-        }
-        
-        if (t.equals(Time.of(1))) {
-            return ImmutableSortedSet.of(a1);
-        }
-        
-        return ImmutableSortedSet.of(a1, Artefact.number(2));
+        return artifacts.headSet(Artefact.number(t.value() + 1));
     }
 }

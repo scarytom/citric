@@ -25,4 +25,16 @@ public final class Artefact implements Comparable<Artefact> {
     public int compareTo(Artefact o) {
         return (number < o.number ? -1 : (number == o.number ? 0 : 1));
     }
+
+    public Artefact next() {
+        return Artefact.number(number + 1);
+    }
+
+    public Artefact previous() {
+        return Artefact.number(number - 1);
+    }
+
+    public long distanceTo(Artefact end) {
+        return end.number - number;
+    }
 }
