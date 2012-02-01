@@ -5,10 +5,11 @@ import java.util.SortedSet;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Ranges;
 
-public final class CommitStream {
+public final class CommitStream implements ArtifactStream {
     
     private ContiguousSet<Artefact> artifacts = Ranges.<Artefact>all().asSet(ArtefactDomain.INSTANCE);
     
+    @Override
     public SortedSet<Artefact> availableAt(Time t) {
         return artifacts.headSet(Artefact.number(t.value() + 1));
     }
