@@ -11,6 +11,6 @@ public final class TargetTest {
     @Test public void
     reportsWhatItHasBuiltToDate() {
         final Target target = new Target();
-        assertThat(target.available(), is(emptyIterable()));
+        assertThat(target.availableAt(Time.of(0)), is(emptyIterable()));
     }
 }
