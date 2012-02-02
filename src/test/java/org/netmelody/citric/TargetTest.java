@@ -33,6 +33,7 @@ public final class TargetTest {
         
         context.checking(new Expectations() {{
             allowing(stream).availableAt(Time.of(1)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1))));
+            allowing(stream).availableAt(Time.of(2)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1))));
         }});
         
         assertThat(target.availableAt(Time.of(2)), is(Matchers.contains(Artefact.number(1))));
@@ -44,11 +45,10 @@ public final class TargetTest {
         final Target target = new Target(stream, Time.of(5));
         
         context.checking(new Expectations() {{
-            allowing(stream).availableAt(Time.of(0)); will(returnValue(ImmutableSortedSet.of()));
             allowing(stream).availableAt(Time.of(1)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1))));
-            allowing(stream).availableAt(Time.of(2)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1), Artefact.number(2))));
+            allowing(stream).availableAt(Time.of(6)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1), Artefact.number(2))));
         }});
         
-        assertThat(target.availableAt(Time.of(2)), is(Matchers.contains(Artefact.number(1))));
+        assertThat(target.availableAt(Time.of(6)), is(Matchers.contains(Artefact.number(1))));
     }
 }
