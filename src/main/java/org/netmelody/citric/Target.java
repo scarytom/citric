@@ -44,7 +44,7 @@ public final class Target implements ArtefactStream {
             return Optional.absent();
         }
         
-        final Artefact candidate = available.first();
+        final Artefact candidate = available.last();
         if (previousBuild.isPresent() && (candidate.compareTo(previousBuild.orNull().artefact()) <= 0)) {
             return Optional.absent();
         }

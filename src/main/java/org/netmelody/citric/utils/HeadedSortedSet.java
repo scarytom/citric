@@ -39,7 +39,7 @@ public final class HeadedSortedSet<E> implements SortedSet<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return Iterators.concat(Iterators.singletonIterator(this.head), this.delegate.iterator());
+        return Iterators.concat(this.delegate.iterator(), Iterators.singletonIterator(this.head));
     }
 
     @Override
@@ -49,18 +49,32 @@ public final class HeadedSortedSet<E> implements SortedSet<E> {
 
     @Override
     public E first() {
-        return this.head;
+        return this.delegate.isEmpty() ? this.head : this.delegate.last();
     }
 
     @Override
     public E last() {
-        return this.delegate.isEmpty() ? this.head : this.delegate.last();
+        return this.head;
     }
 
+    @Override public Object[] toArray() {
+        final int size = size();
+        final Object[] C = new Object[size];
+        System.arraycopy(this.delegate.toArray(), 0, C, 0, size - 1);
+        C[size - 1] = this.head;
+        return C;
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override public <T> T[] toArray(T[] C) {
+        final int size = size();
+        System.arraycopy(this.delegate.toArray(), 0, C, 0, size - 1);
+        C[size - 1] = (T)this.head;
+        return C;
+    }
+    
     @Override public SortedSet<E> headSet(E toElement) { throw new UnsupportedOperationException(); }
     @Override public SortedSet<E> tailSet(E fromElement) { throw new UnsupportedOperationException(); }
-    @Override public Object[] toArray() { throw new UnsupportedOperationException(); }
-    @Override public <T> T[] toArray(T[] a) { throw new UnsupportedOperationException(); }
     @Override public boolean add(E e) { throw new UnsupportedOperationException(); }
     @Override public boolean remove(Object o) { throw new UnsupportedOperationException(); }
     @Override public boolean containsAll(Collection<?> c) { throw new UnsupportedOperationException(); }

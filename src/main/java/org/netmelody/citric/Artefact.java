@@ -37,4 +37,9 @@ public final class Artefact implements Comparable<Artefact> {
     public long distanceTo(Artefact end) {
         return end.number - number;
     }
+    
+    @Override
+    public String toString() {
+        return "Artifact number " + number;
+    }
 }
