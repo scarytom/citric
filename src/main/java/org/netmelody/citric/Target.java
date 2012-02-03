@@ -10,12 +10,15 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
 public final class Target implements ArtefactStream {
     
     private final ArtefactStream parent;
     private final Time duration;
+    private final ImmutableList<ArtefactStream> siblings;
+    private final SimpleBuildInitiator initiator = new SimpleBuildInitiator();
     
     private final LoadingCache<Time, Optional<TimedArtefact>> buildCache = CacheBuilder.newBuilder().build(CacheLoader.from(builds()));
     private final LoadingCache<Time, SortedSet<Artefact>> artefactCache = CacheBuilder.newBuilder().build(CacheLoader.from(artefacts()));
@@ -24,7 +27,17 @@ public final class Target implements ArtefactStream {
         this(parent, Time.of(1));
     }
 
-    private Function<Time, Optional<TimedArtefact>> builds() {
+    public Target(ArtefactStream parent, Time duration) {
+    	this(parent, ImmutableList.<ArtefactStream>of(), duration);
+    }
+
+    public Target(ArtefactStream parent, ImmutableList<ArtefactStream> siblings, Time duration) {
+        this.parent = parent;
+		this.siblings = siblings;
+        this.duration = duration;
+    }
+
+	private Function<Time, Optional<TimedArtefact>> builds() {
         return new Function<Time, Optional<TimedArtefact>>() {
             @Override
             public Optional<TimedArtefact> apply(Time t) {
@@ -39,7 +52,7 @@ public final class Target implements ArtefactStream {
                     }
                 }
                 
-                return determineNextBuild(t, previousBuild);
+                return initiator.determineNextBuild(t, previousBuild, parent, siblings);
             }
         };
     }
@@ -62,11 +75,6 @@ public final class Target implements ArtefactStream {
             }
         };
     }
-
-    public Target(ArtefactStream parent, Time duration) {
-        this.parent = parent;
-        this.duration = duration;
-    }
     
     public SortedSet<Artefact> availableAt(Time t) {
         return artefactCache.getUnchecked(t);
@@ -77,18 +85,20 @@ public final class Target implements ArtefactStream {
 		return imminent.isPresent() ? Optional.of(imminent.orNull().artefact()) : Optional.<Artefact>absent();
     }
     
-    private Optional<TimedArtefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild) {
-        final SortedSet<Artefact> available = parent.availableAt(t);
-        
-        if (available.isEmpty()) {
-            return Optional.absent();
-        }
-        
-        final Artefact candidate = available.last();
-        if (previousBuild.isPresent() && (candidate.compareTo(previousBuild.orNull().artefact()) <= 0)) {
-            return Optional.absent();
-        }
-        
-        return Optional.of(new TimedArtefact(t, candidate)); 
+    public static final class SimpleBuildInitiator {
+	    public Optional<TimedArtefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild, ArtefactStream parentTarget, ImmutableList<ArtefactStream> siblingTargets) {
+	        final SortedSet<Artefact> available = parentTarget.availableAt(t);
+	        
+	        if (available.isEmpty()) {
+	            return Optional.absent();
+	        }
+	        
+	        final Artefact candidate = available.last();
+	        if (previousBuild.isPresent() && (candidate.compareTo(previousBuild.orNull().artefact()) <= 0)) {
+	            return Optional.absent();
+	        }
+	        
+	        return Optional.of(new TimedArtefact(t, candidate)); 
+	    }
     }
 }
