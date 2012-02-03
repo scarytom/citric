@@ -5,7 +5,11 @@ import java.util.SortedSet;
 
 import org.netmelody.citric.utils.HeadedSortedSet;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSortedSet;
 
 public final class Target implements ArtefactStream {
@@ -13,8 +17,50 @@ public final class Target implements ArtefactStream {
     private final ArtefactStream parent;
     private final Time duration;
     
+    private final LoadingCache<Time, Optional<TimedArtefact>> buildCache = CacheBuilder.newBuilder().build(CacheLoader.from(builds()));
+    private final LoadingCache<Time, SortedSet<Artefact>> artefactCache = CacheBuilder.newBuilder().build(CacheLoader.from(artefacts()));
+    
     public Target(ArtefactStream parent) {
         this(parent, Time.of(1));
+    }
+
+    private Function<Time, Optional<TimedArtefact>> builds() {
+        return new Function<Time, Optional<TimedArtefact>>() {
+            @Override
+            public Optional<TimedArtefact> apply(Time t) {
+                if (t.compareTo(Time.of(0)) <= 0) {
+                    return Optional.absent();
+                }
+                
+                final Optional<TimedArtefact> previousBuild = buildCache.getUnchecked(t.minus(Time.of(1)));
+                if (previousBuild.isPresent()) {
+                    if (previousBuild.orNull().time().compareTo(t.minus(duration)) > 0) {
+                        return previousBuild;
+                    }
+                }
+                
+                return determineNextBuild(t, previousBuild);
+            }
+        };
+    }
+
+    private Function<Time, SortedSet<Artefact>> artefacts() {
+        return new Function<Time, SortedSet<Artefact>>() {
+            @Override
+            public SortedSet<Artefact> apply(Time t) {
+                if (t.compareTo(Time.of(0)) <= 0) {
+                    return ImmutableSortedSet.of();
+                }
+                
+                final SortedSet<Artefact> previouslyAvailable = artefactCache.getUnchecked(t.minus(Time.of(1)));
+                final Optional<TimedArtefact> currentBuild = buildCache.getUnchecked(t.minus(Time.of(1)));
+                
+                if (currentBuild.isPresent() && (currentBuild.orNull().time().compareTo(t.minus(duration)) <= 0)) {
+                    return new HeadedSortedSet<Artefact>(previouslyAvailable, currentBuild.orNull().artefact());
+                }
+                return previouslyAvailable;
+            }
+        };
     }
 
     public Target(ArtefactStream parent, Time duration) {
@@ -22,21 +68,10 @@ public final class Target implements ArtefactStream {
         this.duration = duration;
     }
     
-    private Optional<TimedArtefact> currentBuild(Time t) {
-        if (t.compareTo(Time.of(0)) <= 0) {
-            return Optional.absent();
-        }
-        
-        final Optional<TimedArtefact> previousBuild = currentBuild(t.minus(Time.of(1)));
-        if (previousBuild.isPresent()) {
-            if (previousBuild.orNull().time().compareTo(t.minus(duration)) > 0) {
-                return previousBuild;
-            }
-        }
-        
-        return determineNextBuild(t, previousBuild);
+    public SortedSet<Artefact> availableAt(Time t) {
+        return artefactCache.getUnchecked(t);
     }
-
+    
     private Optional<TimedArtefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild) {
         final SortedSet<Artefact> available = parent.availableAt(t);
         
@@ -50,19 +85,5 @@ public final class Target implements ArtefactStream {
         }
         
         return Optional.of(new TimedArtefact(t, candidate)); 
-    }
-
-    public SortedSet<Artefact> availableAt(Time t) {
-        if (t.compareTo(Time.of(0)) <= 0) {
-            return ImmutableSortedSet.of();
-        }
-        
-        final SortedSet<Artefact> previouslyAvailable = availableAt(t.minus(Time.of(1)));
-        final Optional<TimedArtefact> currentBuild = currentBuild(t.minus(Time.of(1)));
-        
-        if (currentBuild.isPresent() && (currentBuild.orNull().time().compareTo(t.minus(duration)) <= 0)) {
-            return new HeadedSortedSet<Artefact>(previouslyAvailable, currentBuild.orNull().artefact());
-        }
-        return previouslyAvailable;
     }
 }
