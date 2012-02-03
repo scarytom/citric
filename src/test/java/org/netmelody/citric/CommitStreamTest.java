@@ -41,4 +41,12 @@ public final class CommitStreamTest {
         final Artefact artefact1 = Iterables.getOnlyElement(commits.availableAt(Time.of(1)));
         assertThat(commits.availableAt(Time.of(2)), hasItem(sameInstance(artefact1)));
     }
+    
+    @Test public void
+    imminentlySuppliesNextArtifact() {
+        final CommitStream commits = new CommitStream();
+        
+        assertThat(commits.imminentAt(Time.of(0)).orNull(), is(Artefact.number(1)));
+        assertThat(commits.imminentAt(Time.of(1)).orNull(), is(Artefact.number(2)));
+    }
 }

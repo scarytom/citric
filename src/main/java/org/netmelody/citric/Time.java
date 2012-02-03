@@ -34,7 +34,11 @@ public final class Time implements Comparable<Time> {
     public Time minus(Time delta) {
         return Time.of(Math.max(value - delta.value, 0));
     }
-    
+
+    public Time plusOne() {
+    	return Time.of(value + 1);
+    }
+
     @Override
     public String toString() {
         return String.format("Time(t=%d)", value);

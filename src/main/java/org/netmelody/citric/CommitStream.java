@@ -2,6 +2,7 @@ package org.netmelody.citric;
 
 import java.util.SortedSet;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Ranges;
 
@@ -12,5 +13,10 @@ public final class CommitStream implements ArtefactStream {
     @Override
     public SortedSet<Artefact> availableAt(Time t) {
         return artifacts.headSet(Artefact.number(t.value() + 1));
+    }
+    
+    @Override
+    public Optional<Artefact> imminentAt(Time t) {
+    	return Optional.of(availableAt(t.plusOne()).last());
     }
 }

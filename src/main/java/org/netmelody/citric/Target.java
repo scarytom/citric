@@ -72,6 +72,11 @@ public final class Target implements ArtefactStream {
         return artefactCache.getUnchecked(t);
     }
     
+    public Optional<Artefact> imminentAt(Time t) {
+    	final Optional<TimedArtefact> imminent = this.buildCache.getUnchecked(t);
+		return imminent.isPresent() ? Optional.of(imminent.orNull().artefact()) : Optional.<Artefact>absent();
+    }
+    
     private Optional<TimedArtefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild) {
         final SortedSet<Artefact> available = parent.availableAt(t);
         
