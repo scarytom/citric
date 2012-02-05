@@ -15,10 +15,10 @@ import com.google.common.collect.ImmutableSortedSet;
 
 public final class Target implements ArtefactStream {
     
+	private final BuildInitiator initiator;
     private final ArtefactStream parent;
-    private final Time duration;
     private final ImmutableList<ArtefactStream> siblings;
-    private final BuildInitiator initiator = new SimpleBuildInitiator();
+    private final Time duration;
     
     private final LoadingCache<Time, Optional<TimedArtefact>> buildCache = CacheBuilder.newBuilder().build(CacheLoader.from(builds()));
     private final LoadingCache<Time, SortedSet<Artefact>> artefactCache = CacheBuilder.newBuilder().build(CacheLoader.from(artefacts()));
@@ -28,11 +28,12 @@ public final class Target implements ArtefactStream {
     }
 
     public Target(ArtefactStream parent, Time duration) {
-    	this(parent, ImmutableList.<ArtefactStream>of(), duration);
+    	this(new SimpleBuildInitiator(), parent, ImmutableList.<ArtefactStream>of(), duration);
     }
 
-    public Target(ArtefactStream parent, ImmutableList<ArtefactStream> siblings, Time duration) {
-        this.parent = parent;
+    public Target(BuildInitiator initiator, ArtefactStream parent, ImmutableList<ArtefactStream> siblings, Time duration) {
+        this.initiator = initiator;
+		this.parent = parent;
 		this.siblings = siblings;
         this.duration = duration;
     }
