@@ -11,7 +11,7 @@ import com.google.common.collect.Sets.SetView;
 public class PipelineTest {
 
 	@Test public void
-	canConstructASimpleLinearPipleline() {
+	canConstructASimpleLinearPipeline() {
 		Pipeline.startingWithACommitStream()
 		        .followedByTargetTaking(Time.of(1));
 	}
