@@ -20,8 +20,8 @@ public final class Target implements ArtefactStream {
     private final ImmutableList<ArtefactStream> siblings;
     private final Time duration;
     
-    private final LoadingCache<Time, Optional<TimedArtefact>> buildCache = CacheBuilder.newBuilder().build(CacheLoader.from(builds()));
-    private final LoadingCache<Time, SortedSet<Artefact>> artefactCache = CacheBuilder.newBuilder().build(CacheLoader.from(artefacts()));
+    private final LoadingCache<Time, Optional<TimedArtefact>> buildCache = CacheBuilder.newBuilder().concurrencyLevel(1).build(CacheLoader.from(builds()));
+    private final LoadingCache<Time, SortedSet<Artefact>> artefactCache = CacheBuilder.newBuilder().concurrencyLevel(1).build(CacheLoader.from(artefacts()));
     
     public Target(ArtefactStream parent) {
         this(parent, Time.of(1));
