@@ -18,7 +18,7 @@ public final class Target implements ArtefactStream {
     private final ArtefactStream parent;
     private final Time duration;
     private final ImmutableList<ArtefactStream> siblings;
-    private final SimpleBuildInitiator initiator = new SimpleBuildInitiator();
+    private final BuildInitiator initiator = new SimpleBuildInitiator();
     
     private final LoadingCache<Time, Optional<TimedArtefact>> buildCache = CacheBuilder.newBuilder().build(CacheLoader.from(builds()));
     private final LoadingCache<Time, SortedSet<Artefact>> artefactCache = CacheBuilder.newBuilder().build(CacheLoader.from(artefacts()));
@@ -83,22 +83,5 @@ public final class Target implements ArtefactStream {
     public Optional<Artefact> imminentAt(Time t) {
     	final Optional<TimedArtefact> imminent = this.buildCache.getUnchecked(t);
 		return imminent.isPresent() ? Optional.of(imminent.orNull().artefact()) : Optional.<Artefact>absent();
-    }
-    
-    public static final class SimpleBuildInitiator {
-	    public Optional<TimedArtefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild, ArtefactStream parentTarget, ImmutableList<ArtefactStream> siblingTargets) {
-	        final SortedSet<Artefact> available = parentTarget.availableAt(t);
-	        
-	        if (available.isEmpty()) {
-	            return Optional.absent();
-	        }
-	        
-	        final Artefact candidate = available.last();
-	        if (previousBuild.isPresent() && (candidate.compareTo(previousBuild.orNull().artefact()) <= 0)) {
-	            return Optional.absent();
-	        }
-	        
-	        return Optional.of(new TimedArtefact(t, candidate)); 
-	    }
     }
 }
