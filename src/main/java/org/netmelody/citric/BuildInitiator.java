@@ -5,8 +5,7 @@ import com.google.common.collect.ImmutableList;
 
 public interface BuildInitiator {
 
-	Optional<TimedArtefact> determineNextBuild(Time t,
-			Optional<TimedArtefact> previousBuild, ArtefactStream parentTarget,
-			ImmutableList<ArtefactStream> siblingTargets);
-
+	Optional<Artefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild,
+			                              ArtefactStream parentTarget,
+			                              ImmutableList<ArtefactStream> siblingTargets);
 }

@@ -52,7 +52,10 @@ public final class Target implements ArtefactStream {
                     }
                 }
                 
-                return initiator.determineNextBuild(t, previousBuild, parent, siblings);
+                final Optional<Artefact> nextArtefact = initiator.determineNextBuild(t, previousBuild, parent, siblings);
+                
+                return nextArtefact.isPresent() ? Optional.of(new TimedArtefact(t, nextArtefact.orNull()))
+                		                        : Optional.<TimedArtefact>absent();
             }
         };
     }

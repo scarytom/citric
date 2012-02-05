@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 public final class SimpleBuildInitiator implements BuildInitiator {
 	
     @Override
-	public Optional<TimedArtefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild,
+	public Optional<Artefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild,
 			                                          ArtefactStream parentTarget, ImmutableList<ArtefactStream> siblingTargets) {
   
     	final SortedSet<Artefact> available = parentTarget.availableAt(t);
@@ -22,6 +22,6 @@ public final class SimpleBuildInitiator implements BuildInitiator {
             return Optional.absent();
         }
         
-        return Optional.of(new TimedArtefact(t, candidate)); 
+        return Optional.of(candidate); 
     }
 }
