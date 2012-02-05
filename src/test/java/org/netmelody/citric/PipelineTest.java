@@ -8,8 +8,14 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 
-public class MultiBuildPipelineTest {
+public class PipelineTest {
 
+	@Test public void
+	canConstructASimpleLinearPipleline() {
+		Pipeline.startingWithACommitStream()
+		        .followedByTargetTaking(Time.of(1));
+	}
+	
     @Test public void
     crazyPipeline() {
         final CommitStream commitStream = new CommitStream();
