@@ -1,20 +1,20 @@
 package org.netmelody.citric.value;
 
-public final class Time implements Comparable<Time> {
+public final class Duration implements Comparable<Duration> {
 
     private final int value;
     
-    private Time(int value) {
+    private Duration(int value) {
         this.value = value;
     }
     
-    public static Time of(int value) {
-        return new Time(value);
+    public static Duration of(int value) {
+        return new Duration(value);
     }
     
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Time) && ((Time)obj).value == value;
+        return (obj instanceof Duration) && ((Duration)obj).value == value;
     }
     
     @Override
@@ -23,24 +23,12 @@ public final class Time implements Comparable<Time> {
     }
     
     @Override
-    public int compareTo(Time o) {
+    public int compareTo(Duration o) {
         return (value < o.value ? -1 : (value == o.value ? 0 : 1));
     }
 
     public int value() {
         return value;
-    }
-
-    public Time minus(Duration delta) {
-        return Time.of(Math.max(value - delta.value(), 0));
-    }
-
-    public Time plusOne() {
-    	return Time.of(value + 1);
-    }
-
-    public Time minusOne() {
-        return Time.of(value - 1);
     }
 
     @Override
