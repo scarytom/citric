@@ -1,6 +1,6 @@
 package org.netmelody.citric;
 
-import org.netmelody.citric.value.Time;
+import org.netmelody.citric.value.Duration;
 
 public final class Pipeline {
 
@@ -9,7 +9,7 @@ public final class Pipeline {
     }
     
     public static final class PipelineBuilder {
-        public PipelineBuilder followedByTargetTaking(Time duration) {
+        public PipelineBuilder followedByTargetTaking(Duration duration) {
             return this;
         }
     }

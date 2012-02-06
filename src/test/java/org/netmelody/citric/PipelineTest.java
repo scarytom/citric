@@ -16,7 +16,7 @@ public class PipelineTest {
     @Test public void
     canConstructASimpleLinearPipeline() {
         Pipeline.startingWithACommitStream()
-                .followedByTargetTaking(Time.of(1));
+                .followedByTargetTaking(Duration.of(1));
     }
     
     @Test public void
