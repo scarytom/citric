@@ -1,4 +1,4 @@
-package org.netmelody.citric;
+package org.netmelody.citric.value;
 
 public final class TimedArtefact {
     

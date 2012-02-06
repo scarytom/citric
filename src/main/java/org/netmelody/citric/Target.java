@@ -4,6 +4,9 @@ package org.netmelody.citric;
 import java.util.SortedSet;
 
 import org.netmelody.citric.utils.HeadedSortedSet;
+import org.netmelody.citric.value.Artefact;
+import org.netmelody.citric.value.Time;
+import org.netmelody.citric.value.TimedArtefact;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;

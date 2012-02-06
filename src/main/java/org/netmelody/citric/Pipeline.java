@@ -1,5 +1,7 @@
 package org.netmelody.citric;
 
+import org.netmelody.citric.value.Time;
+
 public final class Pipeline {
 
 	public static PipelineBuilder startingWithACommitStream() {

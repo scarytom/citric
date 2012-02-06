@@ -1,5 +1,7 @@
 package org.netmelody.citric;
 
+import org.netmelody.citric.value.Artefact;
+
 import com.google.common.collect.DiscreteDomain;
 
 public final class ArtefactDomain extends DiscreteDomain<Artefact> {
