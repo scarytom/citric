@@ -10,12 +10,12 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 public final class SimpleBuildInitiator implements BuildInitiator {
-	
+
     @Override
-	public Optional<Artefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild,
-			                                          ArtefactStream parentTarget, ImmutableList<ArtefactStream> siblingTargets) {
+    public Optional<Artefact> determineNextBuild(Time t, Optional<TimedArtefact> previousBuild,
+                                                 ArtefactStream parentTarget, ImmutableList<ArtefactStream> siblingTargets) {
   
-    	final SortedSet<Artefact> available = parentTarget.availableAt(t);
+        final SortedSet<Artefact> available = parentTarget.availableAt(t);
         
         if (available.isEmpty()) {
             return Optional.absent();

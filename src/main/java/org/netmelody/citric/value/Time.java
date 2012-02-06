@@ -36,7 +36,7 @@ public final class Time implements Comparable<Time> {
     }
 
     public Time plusOne() {
-    	return Time.of(value + 1);
+        return Time.of(value + 1);
     }
 
     public Time minusOne() {

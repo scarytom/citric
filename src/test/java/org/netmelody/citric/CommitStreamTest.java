@@ -8,6 +8,8 @@ import static org.hamcrest.Matchers.sameInstance;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.netmelody.citric.value.Artefact;
+import org.netmelody.citric.value.Time;
 
 import com.google.common.collect.Iterables;
 

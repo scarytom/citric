@@ -8,6 +8,9 @@ import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Test;
+import org.netmelody.citric.value.Artefact;
+import org.netmelody.citric.value.Duration;
+import org.netmelody.citric.value.Time;
 
 import com.google.common.collect.ImmutableSortedSet;
 
@@ -44,7 +47,7 @@ public final class TargetTest {
     @Test public void
     delaysArtefactRateWhenBuildDurationIsLong() {
         final ArtefactStream stream = context.mock(ArtefactStream.class);
-        final Target target = new Target(stream, Time.of(5));
+        final Target target = new Target(stream, Duration.of(5));
         
         context.checking(new Expectations() {{
             allowing(stream).availableAt(Time.of(1)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1))));
@@ -58,7 +61,7 @@ public final class TargetTest {
     @Test public void
     imminentlySuppliesNextArtifact() {
         final ArtefactStream stream = context.mock(ArtefactStream.class);
-        final Target target = new Target(stream, Time.of(5));
+        final Target target = new Target(stream, Duration.of(5));
         
         context.checking(new Expectations() {{
             allowing(stream).availableAt(Time.of(1)); will(returnValue(ImmutableSortedSet.of(Artefact.number(1))));
@@ -76,7 +79,7 @@ public final class TargetTest {
     
     @Test public void
     realisticallySimulatesCommitBuilds() {
-        final Target target = new Target(new CommitStream(), Time.of(2));
+        final Target target = new Target(new CommitStream(), Duration.of(2));
         assertThat(target.availableAt(Time.of(0)), is(Matchers.<Artefact>emptyIterable()));
         assertThat(target.availableAt(Time.of(1)), is(Matchers.<Artefact>emptyIterable()));
         assertThat(target.availableAt(Time.of(2)), is(Matchers.<Artefact>emptyIterable()));

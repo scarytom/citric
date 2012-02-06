@@ -20,6 +20,6 @@ public final class CommitStream implements ArtefactStream {
     
     @Override
     public Optional<Artefact> imminentAt(Time t) {
-    	return Optional.of(availableAt(t.plusOne()).last());
+        return Optional.of(availableAt(t.plusOne()).last());
     }
 }

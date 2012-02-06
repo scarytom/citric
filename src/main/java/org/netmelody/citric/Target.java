@@ -32,7 +32,7 @@ public final class Target implements ArtefactStream {
     }
 
     public Target(ArtefactStream parent, Duration duration) {
-    	this(new SimpleBuildInitiator(), parent, ImmutableList.<ArtefactStream>of(), duration);
+        this(new SimpleBuildInitiator(), parent, ImmutableList.<ArtefactStream>of(), duration);
     }
 
     public Target(BuildInitiator initiator, ArtefactStream parent, ImmutableList<ArtefactStream> siblings, Duration duration) {
@@ -42,7 +42,7 @@ public final class Target implements ArtefactStream {
         this.duration = duration;
     }
 
-	private Function<Time, Optional<TimedArtefact>> builds() {
+    private Function<Time, Optional<TimedArtefact>> builds() {
         return new Function<Time, Optional<TimedArtefact>>() {
             @Override
             public Optional<TimedArtefact> apply(Time t) {
@@ -60,7 +60,7 @@ public final class Target implements ArtefactStream {
                 final Optional<Artefact> nextArtefact = initiator.determineNextBuild(t, previousBuild, parent, siblings);
                 
                 return nextArtefact.isPresent() ? Optional.of(new TimedArtefact(t, nextArtefact.orNull()))
-                		                        : Optional.<TimedArtefact>absent();
+                                                : Optional.<TimedArtefact>absent();
             }
         };
     }
